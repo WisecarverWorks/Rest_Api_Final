@@ -5,6 +5,7 @@ from .serializers import ProductSerializer
 from .models import Product
 
 
+
 # Create your views here.
 
 @api_view(['GET', 'POST'])
@@ -21,7 +22,14 @@ def products_list(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        #if serializer.is_valid() == True:
-            #serializer.save()
-        #return Response(serializer.data, status=status.HTTP_201_CREATED) 
-    #
+
+@api_view(['GET'])
+def products_detail(request, pk):
+
+    try:
+        products = Product.objects.get(pk = pk)
+        serializer = ProductSerializer(products)
+        return Response(serializer.data)
+
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
